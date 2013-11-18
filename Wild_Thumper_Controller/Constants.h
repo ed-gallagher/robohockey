@@ -7,10 +7,10 @@
 
 //=================================== RC MODE OPTIONS ===============================================================================
 
-#define Mix                  1     // Set to 1 if L/R and F/R signals from RC need to be mixed
+#define Mix                  0     // Set to 1 if L/R and F/R signals from RC need to be mixed
 #define Leftcenter        1500     // when RC inputs are centered then input should be 1.5mS
 #define Rightcenter       1500     // when RC inputs are centered then input should be 1.5mS
-#define RCdeadband          35     // inputs do not have to be perfectly centered to stop motors
+#define RCdeadband          75     // inputs do not have to be perfectly centered to stop motors
 #define scale               12     // scale factor for RC signal to PWM
 
 

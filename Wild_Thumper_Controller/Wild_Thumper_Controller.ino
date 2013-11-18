@@ -27,6 +27,9 @@ int RightPWM;                                                 // PWM value for r
 int data;
 int servo[7];
 
+int stickCount = 0;
+unsigned long stickValues[50][2];
+
 //-------------------------------------------------------------- define servos ------------------------------------------------------
 
 
@@ -216,10 +219,35 @@ void loop()
 void RCmode()
 {
   //------------------------------------------------------------ Code for RC inputs ---------------------------------------------------------
-
+  int LeftcenterN = Leftcenter + 0;
+  int RightcenterN = Rightcenter + 0;
+  
   Speed=pulseIn(RCleft,HIGH,25000);                           // read throttle/left stick
   Steer=pulseIn(RCright,HIGH,25000);                          // read steering/right stick
+  
+  /*if (Speed != 0 && Steer !=0 && stickCount < 50) {
+    stickValues[stickCount][0] = Speed;
+    stickValues[stickCount++][1] = Steer;
+  }
+  
+  if(stickCount > 49) {
+    int sctwo;
+    for(sctwo = 0; sctwo < 50; ++sctwo) {
+      Serial.print("[");
+      Serial.print(sctwo);
+      Serial.print("] Left(Speed) = ");
+      Serial.print(stickValues[sctwo][0]);
+      Serial.print(" | Right(Steer) = ");
+      Serial.print(stickValues[sctwo][1]);
+    }
+  }*/
 
+  // Subtract const from speed and steer to try to move baseline down
+  if (Speed != 0 && Steer != 0) {
+    int stickAdjustment = -475;
+    Speed += stickAdjustment;
+    Steer += stickAdjustment;
+  }
 
   if (Speed==0) Speed=1500;                                   // if pulseIn times out (25mS) then set speed to stop
   if (Steer==0) Steer=1500;                                   // if pulseIn times out (25mS) then set steer to centre
@@ -244,15 +272,15 @@ void RCmode()
   Serial.print(" -- Right:");
   Serial.println(Rightspeed);
   */
-  Leftmode=2;
-  Rightmode=2;
-  if (Leftspeed>(Leftcenter+RCdeadband)) Leftmode=0;          // if left input is forward then set left mode to forward
-  if (Rightspeed>(Rightcenter+RCdeadband)) Rightmode=0;       // if right input is forward then set right mode to forward
+  Leftmode=0;
+  Rightmode=0;
+  if (Leftspeed>(Leftcenter+RCdeadband)) Leftmode=2;          // if left input is forward then set left mode to forward
+  if (Rightspeed>(Rightcenter+RCdeadband)) Rightmode=2;       // if right input is forward then set right mode to forward
 
-  LeftPWM=abs(Leftspeed-Leftcenter)*10/scale;                 // scale 1000-2000uS to 0-255
+  LeftPWM=abs(Leftspeed-LeftcenterN)*10/scale;                 // scale 1000-2000uS to 0-255
   LeftPWM=min(LeftPWM,255);                                   // set maximum limit 255
 
-  RightPWM=abs(Rightspeed-Rightcenter)*10/scale;              // scale 1000-2000uS to 0-255
+  RightPWM=abs(Rightspeed-RightcenterN)*10/scale;              // scale 1000-2000uS to 0-255
   RightPWM=min(RightPWM,255);                                 // set maximum limit 255
 }
 
