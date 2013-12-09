@@ -68,6 +68,9 @@ void setup()
   pinMode (Charger,OUTPUT);                                   // change Charger pin to output
   digitalWrite (Charger,1);                                   // disable current regulator to charge battery
 
+  pinMode(S4, OUTPUT);                                        // change servos 4 and 5 to outputs (for the flywheel motor control)
+  pinMode(S5, OUTPUT);
+
   if (Cmode==1) 
   {
     Serial.begin(Brate);                                      // enable serial communications if Cmode=1
@@ -225,6 +228,17 @@ void RCmode()
   Speed=pulseIn(RCleft,HIGH,25000);                           // read throttle/left stick
   Steer=pulseIn(RCright,HIGH,25000);                          // read steering/right stick
   
+  
+//    if(digitalRead(trigger) == LOW){                         // flipped switch on remote control
+        analogWrite(S4, 255);                                   // run one flywheel motor via servo 0
+        analogWrite(S5, 255);                                   // run the other flywheel motor via servo 1
+//    }
+//    if(digitalRead(trigger) == HIGH){
+//       analogWrite(S4, 0);
+//       analogWrite(S5 ,0); 
+//    }
+  
+  
   /*if (Speed != 0 && Steer !=0 && stickCount < 50) {
     stickValues[stickCount][0] = Speed;
     stickValues[stickCount++][1] = Steer;
@@ -281,7 +295,7 @@ void RCmode()
   LeftPWM=min(LeftPWM,255);                                   // set maximum limit 255
 
   RightPWM=abs(Rightspeed-RightcenterN)*10/scale;              // scale 1000-2000uS to 0-255
-  RightPWM=min(RightPWM,255);                                 // set maximum limit 255
+  RightPWM=min(RightPWM,255);                                  // set maximum limit 255
 }
 
 

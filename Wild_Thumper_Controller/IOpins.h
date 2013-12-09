@@ -16,6 +16,7 @@
 #define S6                 12  // Servo output 06
 
 #define Battery            A0  // Analog input 00
+#define trigger            A4  // Analog input A4
 #define RmotorC            A6  // Analog input 06
 #define LmotorC            A7  // Analog input 07
 #define Charger            13  // Low=ON High=OFF
